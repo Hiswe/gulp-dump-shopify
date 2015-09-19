@@ -1,0 +1,12 @@
+shop.json
+themes.json
+blogs.json
+pages.json
+
+; products
+products.json
+
+; collections
+collects.json
+custom_collections.json
+smart_collections.json

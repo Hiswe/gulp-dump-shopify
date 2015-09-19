@@ -1,0 +1,8 @@
+; GETTING SHOP DATAS
+
+domain=https://your-domain.myshopify.com
+
+; credentials are needed to access Shopify API
+; get them in /admin/apps/private/
+apikey=32characterswithnumbersandletter
+password=32characterswithnumbersandletter
