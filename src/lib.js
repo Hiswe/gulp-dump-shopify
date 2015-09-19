@@ -12,7 +12,7 @@ let shopify;
 let pages         = {};
 let products      = {};
 let collections   = {};
-
+let blogs         = {};
 
 function dumpShopify(file, encoding, cb) {
 
@@ -57,7 +57,7 @@ function dumpShopify(file, encoding, cb) {
 
   // Dump first calls
   //    We need to process some datas in order to be closer to Shopify Objects
-  //    This will also help us to gather more dats
+  //    This will also help us to gather more datas
   function treatFirstApiCalls(err, results) {
     log('treat first api calls');
     if (err) return cb(err);
@@ -90,7 +90,7 @@ function dumpShopify(file, encoding, cb) {
     //   and also to have a gigantic JSON at the end
     //   process should be made in JS
     //   just before feeiding those datas to a template engine
-    collections = transform.collections(shopify);
+    collections = transform.collections(shopify, products);
 
     log('gather second rows of api call');
 
@@ -102,7 +102,6 @@ function dumpShopify(file, encoding, cb) {
     // - pages
     shopify.pages.forEach(page => moreRequests[`page-${page.handle}`] = `pages/${page.id}`);
     // - articles
-    let blogs  = {};
     shopify.blogs.forEach(function(blog) {
       blogs[blog.handle]          = blog;
       moreRequests[`blog-${blog.handle}`] = `blogs/${blog.id}/articles`;
@@ -112,31 +111,93 @@ function dumpShopify(file, encoding, cb) {
       moreRequests[`meta-${productId}`] = `products/${productId}/metafields`;
     }
 
-    console.log(moreRequests);
+    log('make & treat second api calls');
 
+    async.forEachOf(moreRequests, secondRowRequest, onDone);
+  }
+
+  function secondRowRequest(url, key, callback) {
+    return req(url, function(err, response) {
+      if (err) return callback(err);
+
+      var result = JSON.parse(response.body);
+      // settings
+      if (key === 'settings') {
+        let settings  = result.asset.value;
+        settings      = {
+          settings: JSON.parse(settings).current
+        };
+        shopify       = Object.assign(shopify, settings);
+        createFile('settings', settings);
+      }
+      // pages
+      if (/^page-/.test(key)) {
+        key =         key.replace('page-', '');
+        let page      = Object.assign({}, result.page);
+        page.content  = page.body_html;
+        createFile(key, page, './page/');
+        pages[key] = page;
+      }
+      // articles
+      if (/^blog-/.test(key)) {
+        let blogHandle  = key.replace('blog-', '');
+        let articles    = result.articles.map(function (article) {
+          article         = Object.assign({}, article);
+          article.tags    = article.tags.split(', ');
+          article.content = article.body_html;
+          article.excerpt = article.summary_html;
+          ['body_html', 'summary_html'].forEach( key => delete article[key])
+          return article;
+        });
+        blogs[blogHandle].articles = articles;
+        createFile(blogHandle, result, './blog/');
+      }
+      // metafields
+      if (/^meta-/.test(key)) {
+        let productId   = key.replace(/^meta-/, '')
+        let metafields  = result.metafields;
+        if (!metafields.length) return callback(null);
+        let meta         = {};
+        for (let m of metafields) {
+          meta[m.namespace]         = meta[m.namespace] || {};
+          meta[m.namespace][m.key]  = m.value;
+        }
+        products[productId].metafields = meta;
+      }
+      callback(null);
+    });
+  }
+
+  function onDone(err, results) {
+    if (err) return cb(err);
     return cb(null);
   }
 }
 
 function createConsolidateDatas(cb) {
-  return cb();
-
-  let that = this;
+  let createFile  = utils.createFile.bind(this);
 
   // JSON can be very large
-  // JSON.stringify have a limit
+  // beware JSON.stringify have a limit
   // -> split the datas in different files in order to avoid size limit
   // -> OR remove unused content
+
   delete shopify.themes;
   delete shopify.collects;
   delete shopify.smart_collections;
   delete shopify.custom_collections;
-  delete shopify.products;
 
-  that.push(createFile('mockup-shopify', shopify));
-  that.push(createFile('mockup-products', products));
-  that.push(createFile('mockup-collections', collections));
-  cb();
+  if (options.debug) {
+    delete shopify.products;
+    delete shopify.collections;
+    createFile('mockup-products', products);
+    createFile('mockup-collections', collections);
+  } else {
+    shopify.products    = products;
+    shopify.collections = collections;
+  }
+  createFile('mockup-shopify', shopify);
+  return cb();
 }
 
 function dumpify(opts) {

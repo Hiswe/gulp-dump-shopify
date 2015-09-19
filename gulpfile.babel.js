@@ -1,15 +1,13 @@
 'use strict';
 
-import del from 'del';
-// const del           = require('del');
+import del            from 'del';
+import gulp           from 'gulp';
+import gutil          from 'gulp-util';
+import babel          from 'gulp-babel';
+import jsbeautifier   from 'gulp-jsbeautifier';
+import dumpify        from './src/index';
+
 const rc            = require('rc')('gds');
-
-const gulp          = require('gulp');
-const gutil         = require('gulp-util');
-const babel         = require('gulp-babel');
-const jsbeautifier  = require('gulp-jsbeautifier');
-
-import dumpify from './src/index';
 
 gulp.task('compile', function () {
   return gulp.src('src/index')
@@ -18,7 +16,6 @@ gulp.task('compile', function () {
 });
 
 // test dump task
-
 gulp.task('clean', function (cb) {
   return del(['tmp'], cb);
 });
@@ -28,7 +25,7 @@ gulp.task('dump', ['clean'], function () {
     domain:   rc.domain,
     apikey:   rc.apikey,
     password: rc.password,
-    verbose:  true,
+    debug:    true,
   })
   // better to have a nice indentation
   .pipe(jsbeautifier({

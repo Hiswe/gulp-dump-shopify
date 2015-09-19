@@ -19,7 +19,7 @@ function products(shopify) {
       .filter( collect => collect.product_id === currentProduct.id)
       .forEach( collect => currentProduct.collections.push(collect.collection_id));
 
-    return product;
+    return currentProduct;
   }
 
   shopify.products.forEach(function (product) {
@@ -60,6 +60,5 @@ function collections(shopify, products) {
 
   return collectionsList;
 }
-
 
 export {products, collections};

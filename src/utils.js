@@ -11,13 +11,13 @@ const config  = {
   domain: false,
   apikey: false,
   password: false,
-  verbose: false,
+  debug: false,
 };
 
 // logger
 const prefix      = gutil.colors.cyan(name);
 function logger(options) {
-  if (!options.verbose) return function () {}
+  if (!options.debug) return function () {}
   return function log(...args) {
     gutil.log(prefix, ...args);
   }
@@ -44,7 +44,7 @@ function rq(options) {
 
   return function apiRequest(path, callback) {
     path = `${domain}/admin/${path}`;
-    if (!/\.json^/.test) path = `${path}.json`;
+    if (!/\.json$/.test(path)) path = `${path}.json`;
     request( path, auth, callback);
   }
 }
