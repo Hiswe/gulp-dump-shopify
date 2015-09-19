@@ -94,7 +94,9 @@ function dumpShopify(file, encoding, cb) {
 
     let moreRequests      = {};
     // - settings
-    let currentTheme  = shopify.themes.find( theme => theme.role === 'main' );
+    //    use Array.find for babel-runtime to catch up…
+    //    so we won't nee babel-polyfill
+    let currentTheme  = Array.find(shopify.themes, theme => theme.role === 'main');
     let id            = currentTheme.id;
     moreRequests.settings = `themes/${currentTheme.id}/assets.json?asset[key]=config/settings_data`;
     // - pages

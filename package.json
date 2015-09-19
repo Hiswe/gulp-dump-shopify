@@ -30,14 +30,15 @@
     "request": "^2.62.0",
     "vinyl-source-stream": "^1.1.0",
     "event-stream": "^3.3.1",
+    "babel-runtime": "^5.8.24",
     "through2": "^2.0.0"
   },
   "devDependencies": {
     "babel-core": "^5.8.24",
-    "babel-runtime": "^5.8.24",
     "del": "^2.0.2",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
+    "gulp-concat": "^2.6.0",
     "gulp-jsbeautifier": "^1.0.1",
     "merge-stream": "^1.0.0",
     "rc": "^1.1.1",
