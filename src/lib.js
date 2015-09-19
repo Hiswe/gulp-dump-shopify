@@ -1,5 +1,3 @@
-// http://mammal.io/articles/using-es6-today/
-
 import * as utils from './utils';
 import * as transform from './to-shopify-object';
 

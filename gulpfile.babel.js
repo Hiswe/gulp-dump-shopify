@@ -6,13 +6,22 @@ import gutil          from 'gulp-util';
 import babel          from 'gulp-babel';
 import jsbeautifier   from 'gulp-jsbeautifier';
 import dumpify        from './src/index';
+import merge          from 'merge-stream';
 
 const rc            = require('rc')('gds');
 
-gulp.task('compile', function () {
-  return gulp.src('src/index')
+gulp.task('build', function () {
+
+  var jsFiles = gulp
+    .src('src/*.js')
     .pipe(babel())
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('dist'));
+
+  var listFiles = gulp
+    .src('src/*.list');
+
+  return merge(jsFiles, listFiles)
+    .pipe(gulp.dest('dist'));
 });
 
 // test dump task
