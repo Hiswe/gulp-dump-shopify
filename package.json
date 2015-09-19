@@ -21,6 +21,9 @@
     "url": "http://hiswe.net"
   },
   "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/Hiswe/gulp-dump-shopify/issues"
+  },
   "dependencies": {
     "async": "^1.4.2",
     "gulp-util": "^3.0.6",
