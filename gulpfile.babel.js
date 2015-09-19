@@ -5,8 +5,8 @@ import gulp           from 'gulp';
 import gutil          from 'gulp-util';
 import babel          from 'gulp-babel';
 import jsbeautifier   from 'gulp-jsbeautifier';
-import dumpify        from './src/index';
 import merge          from 'merge-stream';
+import dumpify        from './src/index';
 
 const rc            = require('rc')('gds');
 const argv          = require('yargs').argv;
@@ -15,7 +15,7 @@ gulp.task('build', function () {
 
   var jsFiles = gulp
     .src('src/*.js')
-    .pipe(babel())
+    .pipe(babel({ optional: ['runtime'] }))
     .pipe(gulp.dest('dist'));
 
   var listFiles = gulp
