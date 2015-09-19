@@ -1,14 +1,22 @@
 {
   "name": "gulp-dump-shopify",
   "version": "1.0.0",
-  "description": "",
+  "description": "Dump some datas from a Shopify shop",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "prepublish": "gulp build"
   },
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "gulpplugin",
+    "shopify"
+  ],
+  "author": {
+    "name": "Yannick Aïvayan",
+    "email": "yannick.aivayan@hiswe.net",
+    "url": "http://hiswe.net"
+  },
+  "license": "WTFPL",
   "dependencies": {
     "async": "^1.4.2",
     "gulp-util": "^3.0.6",

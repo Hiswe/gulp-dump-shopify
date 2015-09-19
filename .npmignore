@@ -1,0 +1,13 @@
+/node_modules
+/src
+/tmp
+
+.DS_Store
+.gdsrc
+.gdsrc-example
+
+npm-debug.log
+gulpfile.babel.js
+CHANGELOG.md
+LICENCE
+README.md
