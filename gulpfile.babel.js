@@ -9,6 +9,7 @@ import dumpify        from './src/index';
 import merge          from 'merge-stream';
 
 const rc            = require('rc')('gds');
+const argv          = require('yargs').argv;
 
 gulp.task('build', function () {
 
@@ -34,7 +35,7 @@ gulp.task('dump', ['clean'], function () {
     domain:   rc.domain,
     apikey:   rc.apikey,
     password: rc.password,
-    debug:    true,
+    debug:    argv.debug != null,
   })
   // better to have a nice indentation
   .pipe(jsbeautifier({

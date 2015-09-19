@@ -63,14 +63,16 @@ function dumpShopify(file, encoding, cb) {
     shopify = {};
     results = results.map( result => result.body);
 
-    // create JSON files for api responses
-    results.forEach( function (result, i) {
-      // gather every thing related to collection in the same place
-      if (/collect/.test(apiCalls[i])) {
-        return createFile(apiCalls[i], result,  './collections/');
-      };
-      return createFile(apiCalls[i], result);
-    });
+
+    if (options.debug) {
+      // create JSON files for api responses
+      results.forEach( function (result, i) {
+        if (/collect/.test(apiCalls[i])) {
+          return createFile(apiCalls[i], result,  './collections/');
+        };
+        return createFile(apiCalls[i], result);
+      });
+    }
 
     // begin to build all datas file.
     for (let result of results) {
@@ -78,8 +80,6 @@ function dumpShopify(file, encoding, cb) {
     }
 
     // - products
-    //   don't write the file now as we need also metafields
-    //   would be fetched in the second rows of API calls
     products = transform.products(shopify);
 
     // - collections
@@ -126,14 +126,14 @@ function dumpShopify(file, encoding, cb) {
           settings: JSON.parse(settings).current
         };
         shopify       = Object.assign(shopify, settings);
-        createFile('settings', settings);
+        if (options.debug) createFile('settings', settings);
       }
       // pages
       if (/^page-/.test(key)) {
         key =         key.replace('page-', '');
         let page      = Object.assign({}, result.page);
         page.content  = page.body_html;
-        createFile(key, page, './page/');
+        if (options.debug) createFile(key, page, './page/');
         pages[key] = page;
       }
       // articles
@@ -148,7 +148,7 @@ function dumpShopify(file, encoding, cb) {
           return article;
         });
         blogs[blogHandle].articles = articles;
-        createFile(blogHandle, result, './blog/');
+        if (options.debug) createFile(blogHandle, result, './blog/');
       }
       // metafields
       if (/^meta-/.test(key)) {
