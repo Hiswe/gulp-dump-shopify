@@ -20,7 +20,9 @@ gulp.task('clean-build', function (cb) {
 gulp.task('build', ['clean-build'], function () {
   var jsBabel = gulp
     .src('src/*.js')
-    .pipe(babel({ optional: ['runtime'] }));
+    .pipe(babel({
+      presets:  ['es2015'],
+    }));
   var listFiles = gulp
     .src('src/*.list');
   return merge(jsBabel, listFiles)
