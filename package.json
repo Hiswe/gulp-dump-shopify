@@ -1,6 +1,6 @@
 {
   "name": "gulp-dump-shopify",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Dump some datas from a Shopify shop",
   "main": "dist/index.js",
   "scripts": {
